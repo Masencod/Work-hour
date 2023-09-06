@@ -47,6 +47,7 @@ export default function Home() {
   useEffect(() => {
     netlifyAuth.initialize((user: any) => {
       setLoggedIn(!!user)
+      setUser(user)
     })
   }, [loggedIn])
 
@@ -68,7 +69,7 @@ export default function Home() {
 
   return (
     <main>
-      <button onClick={() => login()}>damn boi where did u find this</button>
+      <button onClick={() => login()}>{loggedIn ? `damn boi where did u find this` : `damn boi u need to log in`}</button>
 
     </main>
   )
