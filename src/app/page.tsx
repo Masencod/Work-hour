@@ -65,6 +65,10 @@ export default function Home() {
       setUser(null)
     })
   }
+  
+  useEffect(() => {
+    console.log(user)
+  },[user])
 
 
   return (
