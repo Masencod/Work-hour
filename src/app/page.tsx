@@ -1,8 +1,26 @@
-"use client"
-import Image from 'next/image'
-import netlifyIdentity from 'netlify-identity-widget';
-import { useEffect, useState } from "react"
+"use client";
+import NavBar from "@/Components/NavBar";
+import Image from "next/image";
+import netlifyIdentity from "netlify-identity-widget";
+import { useEffect, useState } from "react";
+import DateChecker from "@/Components/DateChecker";
+import { userTypes } from "types/*";
 
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc , getDoc, DocumentData } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
+import "firebase/firestore";
+import firebase from "firebase/compat/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCQLEjdTMFiE-j-3yoCkwPvr7QTw_tDPIg",
+  authDomain: "work-hour-sajjad.firebaseapp.com",
+  projectId: "work-hour-sajjad",
+  storageBucket: "work-hour-sajjad.appspot.com",
+  messagingSenderId: "203542690526",
+  appId: "1:203542690526:web:2f45358268ef15c27ea04f",
+  measurementId: "G-4JYP1TLMVY",
+};
 
 declare global {
   interface Window {
@@ -10,71 +28,136 @@ declare global {
   }
 }
 
-export default function Home() {
+const dataF = {
+  1402: {
+    6: {
+      1: {
+        enter_time: 1000,
+        exit_time: 1200,
+        personal_time: 10,
+        project: "BEHBINgggggggg",
+        isHoliday: true,
+      },
+      2: {
+        enter_time: 1000,
+        exit_time: 1200,
+        personal_time: 10,
+        project: "BEHBINgggggggg",
+        isHoliday: false,
+      },
+      21: {
+        enter_time: 1000,
+        exit_time: 1200,
+        project: "BEHBINgggggggg",
+        isHoliday: true,
+      },
+    },
+  },
+}
 
+export default function Home() {
   const netlifyAuth = {
     isAuthenticated: false,
-    user: null,
+    user: null as userTypes | null,
     initialize(callback: any) {
-      window.netlifyIdentity = netlifyIdentity
-      netlifyIdentity.on('init', (user: any) => {
-        callback(user)
-      })
-      netlifyIdentity.init()
+      window.netlifyIdentity = netlifyIdentity;
+      netlifyIdentity.on("init", (user: userTypes) => {
+        callback(user);
+      });
+      netlifyIdentity.init();
     },
     authenticate(callback: any) {
-      this.isAuthenticated = true
-      netlifyIdentity.open()
-      netlifyIdentity.on('login', (user: any) => {
-        this.user = user
-        callback(user)
-        netlifyIdentity.close()
-      })
+      this.isAuthenticated = true;
+      netlifyIdentity.open();
+      netlifyIdentity.on("login", (user: userTypes) => {
+        this.user = user;
+        callback(user);
+        netlifyIdentity.close();
+      });
     },
     signout(callback: any) {
-      this.isAuthenticated = false
-      netlifyIdentity.logout()
-      netlifyIdentity.on('logout', () => {
-        this.user = null
-        callback()
-      })
+      this.isAuthenticated = false;
+      netlifyIdentity.logout();
+      netlifyIdentity.on("logout", () => {
+        this.user = null;
+        callback();
+      });
     },
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const [user, setUser] = useState<userTypes | null>(null);
+  const [userFromDb, setUserFromDb] = useState<DocumentData | null>(null);
+  const [loggedIn, setLoggedIn] = useState(netlifyAuth.isAuthenticated);
+  
+  async function addWorkHourEntry(userName: string , userData: {}): Promise<void> {
+    console.log(userName , userData)
+    await setDoc(doc(db, "users", userName), userData);
+    fetchUser(userName);
   }
 
-  let [user, setUser] = useState(null)
-  let [loggedIn, setLoggedIn] = useState(netlifyAuth.isAuthenticated)
-
-  useEffect(() => {
-    netlifyAuth.initialize((user: any) => {
-      setLoggedIn(!!user)
-      setUser(user)
-    })
-  }, [loggedIn])
-
-
-  let login = () => {
-    netlifyAuth.authenticate((user: any) => {
-      setLoggedIn(!!user)
-      setUser(user)
-    })
+  async function fetchUser(userName: string) {
+    const userDoc = doc(db, 'users', userName);
+    const userSnapshot = await getDoc(userDoc);
+    if (userSnapshot.exists()) {
+      setUserFromDb(userSnapshot.data())
+    } else {
+      console.log('No such document!');
+    }
   }
   
-  let logout = () => {
+  const login = () => {
+    netlifyAuth.authenticate((user: userTypes) => {
+      setLoggedIn(!!user);
+      setUser(user);
+    });
+  };
+
+  const logout = () => {
     netlifyAuth.signout(() => {
-      setLoggedIn(false)
-      setUser(null)
-    })
-  }
-  
+      setLoggedIn(false);
+      setUser(null);
+    });
+  };
+
   useEffect(() => {
-    console.log(user)
-  },[user])
+    netlifyAuth.initialize((user: userTypes) => {
+      setLoggedIn(!!user);
+      setUser(user);
+    });
+    if (user?.user_metadata?.full_name) {
+      fetchUser(user?.user_metadata?.full_name)
+    }
+  }, [loggedIn]);
 
 
   return (
-    <main>
-      <button onClick={() => login()}>{loggedIn ? `damn boi where did u find this` : `damn boi u need to log in`}</button>
+    <>
+      {loggedIn
+        ?
+          <main className="w-full">
+            <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
+            <div className="mt-2 px-2 w-full">
+              <DateChecker user={userFromDb} addTime={addWorkHourEntry} userName={user?.user_metadata?.full_name}/>
+              <div>
 
-    </main>
-  )
+              </div>
+            </div>
+          </main>
+        : 
+          <>
+            <div className="w-full h-[100vh] flex justify-center items-center">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                onClick={login}
+              >
+                U NEEED TOOO LOGGGIIIIINNNNNNNNNN
+              </button>
+            </div>
+          </>
+      }
+    </>
+  );
 }
