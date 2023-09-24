@@ -62,12 +62,12 @@ export default function DayTile<T extends DateObject>({
       >
         <h3>{date.day}</h3>
       </div>
-      <Modal
+      {/* <Modal
         isOpen={false}
         setIsOpen={() => console.log}
       >
         awdawd
-      </Modal>
+      </Modal> */}
     </>
   );
 }
