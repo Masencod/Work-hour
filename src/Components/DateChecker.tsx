@@ -63,6 +63,12 @@ export default function DateChecker({
       setMonth(value);
     }
   };
+  const handleMonthAdd = () => {
+      setMonth((prev => prev >= 1 && prev <= 11 ? prev + 1 : prev));
+  };
+  const handleMonthMinus = () => {
+    setMonth((prev => prev >= 2 && prev <= 12 ? prev - 1 : prev));
+  };
 
   useEffect(() => {
     console.log(user)
@@ -118,30 +124,40 @@ export default function DateChecker({
           />
         </label>
         <button
-          className={`${isSelecting ? `bg-green-500 hover:bg-green-700` : `bg-red-500 hover:bg-red-700` } text-white font-bold py-2 px-4 rounded-full`}
+          className={`${isSelecting ? `bg-green-500 hover:bg-green-700` : `bg-red-500 hover:bg-red-700` } text-white text-sm font-bold py-1 px-2 rounded-full`}
           onClick={() => setIsSelecting(!isSelecting)}
         >
           Select Holidays
         </button>
-        <label className="flex flex-col items-center w-full">
-          <span className="mb-2">Month:</span>
-          <input
-            type="number"
-            inputMode="numeric"
-            value={month}
-            onChange={handleMonthChange}
-            className="p-2 bg-slate-500 border rounded-md w-1/2"
-          />
-        </label>
+        <div className="flex items-center gap-x-4 md:gap-x-10 justify-end w-full">
+          <label className="flex flex-col items-center w-full">
+            <span className="mb-2">Month:</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              value={month}
+              onChange={handleMonthChange}
+              className="p-2 bg-slate-500 border rounded-md w-1/2"
+            />
+          </label>
+          <div className="flex justify-center gap-x-5 items-center mr-4 mt-8">
+            <div className="text-2xl md:text-5xl cursor-pointer" onClick={handleMonthAdd}>
+              +
+            </div>
+            <div className="text-2xl md:text-5xl cursor-pointer" onClick={handleMonthMinus}>
+              -
+            </div>
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-7 gap-4 md:gap-8">
-        <p className="text-center text-sm">Saturday</p>
-        <p className="text-center text-sm">Sunday</p>
-        <p className="text-center text-sm">Monday</p>
-        <p className="text-center text-sm">Tuesday</p>
-        <p className="text-center text-sm">Wednesday</p>
-        <p className="text-center text-sm">Thursday</p>
-        <p className="text-center text-sm">Friday</p>
+        <p className="text-center text-xs">Saturday</p>
+        <p className="text-center text-xs">Sunday</p>
+        <p className="text-center text-xs">Monday</p>
+        <p className="text-center text-xs">Tuesday</p>
+        <p className="text-center text-xs">Wednesday</p>
+        <p className="text-center text-xs">Thursday</p>
+        <p className="text-center text-xs">Friday</p>
         {days.map((date, index) => (
           <DayTile
             id={`${year}-${month}-${index + 1}`}
