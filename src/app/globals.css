@@ -2,3 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  position: relative;
+}
+
+.bodyContainer {
+  position: fixed;
+  z-index: 1000;
+  bottom: 0;
+  background-color: white;
+  overflow: hidden;
+}
+
+.tooltipContainer {
+  position: absolute;
+  z-index: 1000;
+  top: 1rem;
+  right: 0;
+  background-color: white;
+  overflow: hidden;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: #7e7e7e7c;
+  z-index: 900;
+}
+
+.tooltip {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 900;
+}
+
+.customButtonPad {
+  padding: 8.675px 14px 8.675px 13px;
+}
+
+@keyframes scaleup {
+  0% {
+    opacity: 0;
+    transform: scale(1) translateY(1000px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes scaleuptwo {
+  0% {
+    opacity: 0;
+    transform: scale(1) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animationScaleUp {
+  animation: scaleup 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}

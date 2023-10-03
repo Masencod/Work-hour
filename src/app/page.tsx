@@ -56,6 +56,7 @@ const dataF = {
 }
 
 export default function Home() {
+
   const netlifyAuth = {
     isAuthenticated: false,
     user: null as userTypes | null,
@@ -92,8 +93,7 @@ export default function Home() {
   const [userFromDb, setUserFromDb] = useState<DocumentData | null>(null);
   const [loggedIn, setLoggedIn] = useState(netlifyAuth.isAuthenticated);
   
-  async function addWorkHourEntry(userName: string , userData: {}): Promise<void> {
-    console.log(userName , userData)
+  async function addWorkHourEntry(userName: string , userData: DocumentData | null): Promise<void> {
     await setDoc(doc(db, "users", userName), userData);
     fetchUser(userName);
   }
@@ -104,7 +104,7 @@ export default function Home() {
     if (userSnapshot.exists()) {
       setUserFromDb(userSnapshot.data())
     } else {
-      console.log('No such document!');
+      console.warn('No such document!');
     }
   }
   
@@ -139,9 +139,9 @@ export default function Home() {
         ?
           <main className="w-full">
             <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
-            <div className="mt-2 px-2 w-full">
-              <DateChecker user={userFromDb} addTime={addWorkHourEntry} userName={user?.user_metadata?.full_name}/>
-              <div>
+            <div className="mt-2 px-2">
+              <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.user_metadata?.full_name}/>
+            <div>
 
               </div>
             </div>

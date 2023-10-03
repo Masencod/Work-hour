@@ -1,7 +1,7 @@
 import Modal from "./Modal";
 
 
-interface DateObject {
+export interface DateObject {
   day: number;
   month: number;
   year: number;
@@ -40,7 +40,7 @@ export default function DayTile<T extends DateObject>({
     if (user?.[date.year]?.[date.month]?.[date.day]) {
       if (user?.[date.year]?.[date.month]?.[date.day]?.isHoliday) {
         return squareCLasses["holiday"]
-      } else if (Object.keys(user?.[date.year]?.[date.month]?.[date.day]).length === 5) { 
+      } else if (Object.keys(user?.[date.year]?.[date.month]?.[date.day]).filter(item => item !== "isHoliday").length === 4) { 
         return squareCLasses["done"]
       } else if (Object.keys(user?.[date.year]?.[date.month]?.[date.day]).length === 0) {
         return squareCLasses["notTouched"]
@@ -62,12 +62,6 @@ export default function DayTile<T extends DateObject>({
       >
         <h3>{date.day}</h3>
       </div>
-      {/* <Modal
-        isOpen={false}
-        setIsOpen={() => console.log}
-      >
-        awdawd
-      </Modal> */}
     </>
   );
 }

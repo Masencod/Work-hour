@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 
 const Modal = ({
-  isOpen,
+  isOpen = false,
   setIsOpen,
   onOverlayClick = console.log,
   className = "",
   children,
 }: {
   isOpen: boolean,
-  setIsOpen: () => void,
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onOverlayClick?: Function,
   className?: string,
   children: React.ReactNode,
@@ -17,12 +17,11 @@ const Modal = ({
   
   useEffect(() => {
     const handleWindowResize = () => {
-      if (window.innerWidth < 1023) {
-        if (isOpen) {
-          document.body.classList.add("modal-open");
-        } else {
-          document.body.classList.remove("modal-open");
-        }
+      if (isOpen) {
+        document.body.classList.add("modal-open");
+      } else {
+        document.body.classList.remove("modal-open");
+        setIsOpen(false)
       }
     };
     handleWindowResize();
@@ -37,14 +36,13 @@ const Modal = ({
       onClick={(e: any) => {
         if (e && typeof e.target.className === "string" && e.target.className.includes("overlay")) {
           e.stopPropagation();
-          setIsOpen();
-          onOverlayClick();
+          setIsOpen(false);
         }
       }}
-      className={`overlay ${!isOpen ? "hidden" : ""} lg:hidden`}
+      className={`${!isOpen ? "!hidden" : ""} overlay`}
     >
       <div
-        className={`bodyContainer animationScaleUp ${className}`}
+        className={`bodyContainer animationScaleUp rounded-t-3xl w-full h-[65vh] md:top-1/4 md:rounded-xl md:mx-auto md:w-[615px] md:h-1/2 ${className}`}
       >
         {children}
       </div>
