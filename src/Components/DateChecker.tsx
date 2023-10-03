@@ -39,8 +39,15 @@ export default function DateChecker({
   const [vacDays, setVacDays] = useState<number>(2);
   const [baseWorkhours, setbaseWorkHours] = useState<number>(7.33);
 
-  const [year, setYear] = useState<number>(1402);
-  const [month, setMonth] = useState<number>(1);
+  const currentDate = new Date();
+  const jalaliDate = jalaali.toJalaali(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1, // Note: JavaScript months are 0-based, so we add 1
+    currentDate.getDate()
+  );
+
+  const [year, setYear] = useState<number>(jalaliDate.jy);
+  const [month, setMonth] = useState<number>(jalaliDate.jm);
   const [workDays, setWorkDays] = useState<number>(30);
   const [workedHours, setWorkedHours] = useState<number>(0);
   const [baseHours, setBaseHours] = useState<number>(0);
