@@ -5,7 +5,7 @@ import netlifyIdentity from "netlify-identity-widget";
 import { useEffect, useState } from "react";
 import DateChecker from "@/Components/DateChecker";
 import { userTypes } from "types/*";
-
+import * as jalaali from "jalaali-js";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc , getDoc, DocumentData } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
@@ -89,10 +89,21 @@ export default function Home() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  const currentDate = new Date();
+  const jalaliDate = jalaali.toJalaali(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1, // Note: JavaScript months are 0-based, so we add 1
+    currentDate.getDate()
+  );
+
   const [user, setUser] = useState<userTypes | null>(null);
   const [userFromDb, setUserFromDb] = useState<DocumentData | null>(null);
   const [loggedIn, setLoggedIn] = useState(netlifyAuth.isAuthenticated);
   
+  useEffect(() => {
+    console.log(user)
+  },[user])
+
   async function addWorkHourEntry(userName: string , userData: DocumentData | null): Promise<void> {
     await setDoc(doc(db, "users", userName), userData);
     fetchUser(userName);
@@ -104,7 +115,22 @@ export default function Home() {
     if (userSnapshot.exists()) {
       setUserFromDb(userSnapshot.data())
     } else {
-      console.warn('No such document!');
+      const year = jalaliDate.jy
+      const month = jalaliDate.jm
+      const userData = {
+        [year]: {
+          [month]: {
+
+          }
+        },
+      };
+      await setDoc(userDoc, userData);
+      const newUserSnapshot = await getDoc(userDoc);
+      if (newUserSnapshot.exists()) {
+        setUserFromDb(newUserSnapshot.data());
+      } else {
+        console.error('Failed to create and fetch the new document.');
+      }
     }
   }
   
@@ -127,8 +153,8 @@ export default function Home() {
       setLoggedIn(!!user);
       setUser(user);
     });
-    if (user?.user_metadata?.full_name) {
-      fetchUser(user?.user_metadata?.full_name)
+    if (user?.email) {
+      fetchUser(user?.email)
     }
   }, [loggedIn]);
 
@@ -140,7 +166,7 @@ export default function Home() {
           <main className="w-full">
             <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
             <div className="mt-2 px-2">
-              <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.user_metadata?.full_name}/>
+              <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.email}/>
             <div>
 
               </div>
