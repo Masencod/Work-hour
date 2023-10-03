@@ -206,7 +206,7 @@ export default function DateChecker({
               />
             </label>
             <button
-              className={`${isSelecting ? `bg-green-500 hover:bg-green-700` : `bg-red-500 hover:bg-red-700` } text-white text-sm font-bold py-1 px-2 rounded-full aspect-square`}
+              className={`${isSelecting ? `bg-green-500 hover:bg-green-700 motion-safe:animate-bounce` : `bg-red-500 hover:bg-red-700` } text-white text-sm font-bold py-1 px-2 rounded-full aspect-square`}
               onClick={handleSelection}
             >
               {isSelecting ? "Make Changes" : "Select Holidays"}
