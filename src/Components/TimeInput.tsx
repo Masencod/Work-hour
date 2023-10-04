@@ -18,23 +18,16 @@ function TimeInput({ value , onChange }: TimeInputProps) {
   };
 
   const handleInputBlur = () => {
-    let formattedInput = inputValue ? inputValue.replace(/\D/g, '') : undefined; // Remove non-digit characters
-
-    // Ensure the formatted value is exactly 4 digits
+    let formattedInput = inputValue ? inputValue.replace(/\D/g, '') : undefined;
     formattedInput = formattedInput ? formattedInput.padStart(4, '0') : undefined;
-    
-    // Extract hours and minutes
     let newHours:number | undefined = undefined
     let newMinutes:number | undefined = undefined
     if (formattedInput) {
       newHours = parseInt(formattedInput.slice(0, 2), 10);
       newMinutes = parseInt(formattedInput.slice(2, 4), 10);
     }
-    
     //@ts-ignore
     const newTimeValue = formattedInput ? Math.min(23, Math.max(0, newHours)) * 100 + Math.min(59, Math.max(0, newMinutes)) : undefined;
-
-    // Update the input value with the colon and notify the parent component
     setInputValue(prev => formattedInput ? `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}` : undefined);
     //@ts-ignore
     onChange(prev => newTimeValue);
@@ -45,7 +38,7 @@ function TimeInput({ value , onChange }: TimeInputProps) {
       className="p-2 rounded-lg text-black"
       value={inputValue}
       onChange={handleInputChange}
-      onBlur={handleInputBlur} // Validate and update the value on blur
+      onBlur={handleInputBlur}
       type="text"
       inputMode="numeric"
     />

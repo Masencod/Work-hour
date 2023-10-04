@@ -5,6 +5,7 @@ import DayTile from "./DayTile";
 import Modal from "./Modal";
 import { DateObject } from "./DayTile";
 import AddOrEditDateTimes from "./AddOrEditDateTimes";
+import { CSVDownload } from "react-csv";
 
 
 type weekDayType = {
@@ -23,6 +24,18 @@ export type DateProps = {
   personal_time?: number,
   project?: string,
 }
+
+const headers = [" ","ساعت ورود" , "ساعت خروج" , "تایم در اختیار" , "نام پروژه" ]
+
+const weekDaysToGridColumns: weekDayType  = {
+  Saturday: "col-start-1",
+  Sunday: "col-start-2",
+  Monday: "col-start-3",
+  Tuesday: "col-start-4",
+  Wednesday: "col-start-5",
+  Thursday: "col-start-6",
+  Friday: "col-start-7",
+};
 
 export default function DateChecker({
   user,
@@ -57,6 +70,8 @@ export default function DateChecker({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalDate, setModalDate] = useState<DateProps>({})
   const [modalDay, setModalDay] = useState<DateObject>({day: 1, month: 1, year: 1402,dayOfWeek: ""})
+  const [dataForCSV, setDataForCSV] = useState<any>([])
+  const [isDownloadReady, setIsDownloadReady] = useState(0);
 
   const daysInMonth = jalaali.jalaaliMonthLength(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => {
@@ -135,6 +150,34 @@ export default function DateChecker({
     return timeDiffInHours;
   }
 
+  function formatNumberToTime(number: any) {
+    if (typeof number !== 'number') {
+      return '';
+    }
+    const hours = Math.floor(number / 100);
+    const minutes = number % 100;
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  function calculateCSV() {
+    const monthData = user?.[year]?.[month];
+    //@ts-ignore
+    const monthValues:any = Object.values(monthData).filter((item) => item?.start_time && item?.end_time && item?.personal_time)
+    //@ts-ignore
+    const monthKeys = Object.keys(monthData).filter((item) => monthData[item]?.start_time && monthData[item]?.end_time && monthData[item]?.personal_time);
+    const data: any = []
+    monthKeys.forEach((item , index) => {
+      data.push([ item , formatNumberToTime(monthValues[index]["start_time"]) , formatNumberToTime(monthValues[index]["end_time"]) , formatNumberToTime(monthValues[index]["personal_time"]) ,  ...(monthValues[index]["project"] ? [monthValues[index]["project"]] : []) ])
+    })
+    console.log(data)
+    //@ts-ignore
+    // setDataForCSV(prev => data)
+    setDataForCSV(data)
+  }
+
   useEffect(() => {
     setBaseHours((prev) => Number((workDays * baseWorkhours).toFixed(2)));
     setVacHours((prev) => Number(((workDays - vacDays) * baseWorkhours).toFixed(2)));
@@ -154,7 +197,7 @@ export default function DateChecker({
         holidays = Object.values(monthData).filter((item) => item?.isHoliday === true).length;
         workedHours = Number(
           //@ts-ignore
-          Object.values(monthData).filter((item) => item?.start_time && item?.end_time).reduce((acc:any, cur:any) => {
+          Object.values(monthData).filter((item) => item?.start_time && item?.end_time && item?.personal_time).reduce((acc:any, cur:any) => {
             const time = calculateTimeDifference(cur.start_time, cur.end_time);
             acc += time - convertTimeToHours(cur.personal_time);
             return acc;
@@ -180,15 +223,6 @@ export default function DateChecker({
   }
 
   const firstDayOfWeek: any = days[0].dayOfWeek;
-  const weekDaysToGridColumns: weekDayType  = {
-    Saturday: "col-start-1",
-    Sunday: "col-start-2",
-    Monday: "col-start-3",
-    Tuesday: "col-start-4",
-    Wednesday: "col-start-5",
-    Thursday: "col-start-6",
-    Friday: "col-start-7",
-  };
 
   return (
     <>
@@ -202,7 +236,7 @@ export default function DateChecker({
                 inputMode="numeric"
                 value={year}
                 onChange={handleYearChange}
-                className="p-2 bg-slate-500 border rounded-md w-1/2"
+                className="p-2 bg-slate-500 border rounded-md w-[3.4rem] md:w-1/2"
               />
             </label>
             <button
@@ -211,11 +245,11 @@ export default function DateChecker({
             >
               {isSelecting ? "Make Changes" : "Select Holidays"}
             </button>
-            <div className="flex justify-center gap-x-5 items-center !ml-8">
-                <div className="text-2xl md:text-5xl cursor-pointer" onClick={handleMonthAdd}>
+            <div className="flex justify-center gap-x-5 items-center !ml-6 md:!ml-8">
+                <div className="text-3xl md:text-5xl cursor-pointer" onClick={handleMonthAdd}>
                   +
                 </div>
-                <div className="text-2xl md:text-5xl cursor-pointer" onClick={handleMonthMinus}>
+                <div className="text-3xl md:text-5xl cursor-pointer" onClick={handleMonthMinus}>
                   -
                 </div>
               </div>
@@ -227,7 +261,7 @@ export default function DateChecker({
                   inputMode="numeric"
                   value={month}
                   onChange={handleMonthChange}
-                  className="p-2 bg-slate-500 border rounded-md w-1/2"
+                  className="p-2 bg-slate-500 border rounded-md w-[2.2rem] md:w-1/2"
                 />
               </label>
             </div>
@@ -297,6 +331,18 @@ export default function DateChecker({
                 </p>
               </div>
             </div>
+          </div>
+          <div>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            onClick={() => {
+              //@ts-ignore
+              setDataForCSV(prev => [])
+              setIsDownloadReady(prev => prev + 1)
+              calculateCSV()
+              }}>
+              Download CSV
+            </button>
+            {dataForCSV.length > 0 && <CSVDownload key={isDownloadReady} data={dataForCSV} headers={headers}/>}
           </div>
         </div>
         <Modal

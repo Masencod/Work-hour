@@ -2,7 +2,7 @@
 import NavBar from "@/Components/NavBar";
 import Image from "next/image";
 import netlifyIdentity from "netlify-identity-widget";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DateChecker from "@/Components/DateChecker";
 import { userTypes } from "types/*";
 import * as jalaali from "jalaali-js";
@@ -100,8 +100,10 @@ export default function Home() {
   const [userFromDb, setUserFromDb] = useState<DocumentData | null>(null);
   const [loggedIn, setLoggedIn] = useState(netlifyAuth.isAuthenticated);
   
-  useEffect(() => {
-    console.log(user)
+  useMemo(() => {
+    if (user) {
+      setLoggedIn(true)
+    }
   },[user])
 
   async function addWorkHourEntry(userName: string , userData: DocumentData | null): Promise<void> {
@@ -136,6 +138,7 @@ export default function Home() {
   
   const login = () => {
     netlifyAuth.authenticate((user: userTypes) => {
+      console.log(user)
       setLoggedIn(!!user);
       setUser(user);
     });

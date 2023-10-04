@@ -3,6 +3,7 @@ import { DocumentData } from "firebase/firestore";
 import { DateProps } from "./DateChecker";
 import TimeInput from "./TimeInput";
 
+const persianMonths = [ "فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"]
 
 export default function AddOrEditDateTimes ({
   userName ,
@@ -49,24 +50,65 @@ export default function AddOrEditDateTimes ({
     setIsOpen(false)
   }
 
-  useEffect(() => {
-    setStartTime(undefined)
-    setEndtTime(undefined)
-    setPersonalTime(undefined)
-    setProject(data?.project ?? "")
-  },[isOpen])
+  function convertTimeToHours(time:number) {
+    const hours = Math.floor(time / 100);
+    const minutes = time % 100;
+    const timeInHours = hours + minutes / 60;
+  
+    return timeInHours;
+  }
+
+  function calculateTimeDifference(time1:number, time2:number) {
+    const hours1 = Math.floor(time1 / 100);
+    const minutes1 = time1 % 100;
+    const hours2 = Math.floor(time2 / 100);
+    const minutes2 = time2 % 100;
+    const totalMinutes1 = hours1 * 60 + minutes1;
+    const totalMinutes2 = hours2 * 60 + minutes2;
+    const timeDiffInMinutes = totalMinutes2 - totalMinutes1;
+    const timeDiffInHours = timeDiffInMinutes / 60;
+  
+    return timeDiffInHours;
+  }
+
+  // useEffect(() => {
+  //   setStartTime(undefined)
+  //   setEndtTime(undefined)
+  //   setPersonalTime(undefined)
+  //   setProject(data?.project ?? "")
+  // },[isOpen])
   
   useEffect(() => {
-    if (data) {
-      setStartTime(data?.start_time ?? undefined)
-      setEndtTime(data?.end_time ?? undefined)
-      setPersonalTime(data?.personal_time ?? undefined)
-      setProject(data?.project ?? "")
-    }
-  },[data])
+      console.log(data)
+      console.log(date)
+      setStartTime(data ? data?.start_time ? data.start_time : undefined : undefined)
+      setEndtTime(data ? data?.end_time ? data.end_time : undefined : undefined)
+      setPersonalTime(data ? data?.personal_time ? data.personal_time : undefined : undefined)
+      setProject(data ? data?.project ? data.project : "" : "")
+    
+  },[data,date])
 
   return (
     <div className="flex flex-col gap-y-5 bg-slate-400 h-full w-full p-4 justify-center items-center">
+      <div className="flex flex-row-reverse items-center gap-x-2">
+        <div className="flex flex-row-reverse gap-x-2">
+          <p className="text-xl">
+            {date.day}
+          </p>
+          <p className="text-xl">
+            {persianMonths[date.month - 1]}
+          </p>
+        </div>
+        {startTime && endtTime && <p className="text-teal-200 flex flex-row-reverse gap-x-2">
+          <span className="mt-[2px] text-white">
+            |
+          </span>
+          {personalTime
+            ? (calculateTimeDifference(startTime, endtTime) - convertTimeToHours(personalTime)).toFixed(2) + "  Hours"
+            : calculateTimeDifference(startTime, endtTime).toFixed(2) + "  Hours"
+          }
+        </p>}
+      </div>
       <ul className="flex flex-col gap-y-3 md:gap-y-4">
         <li>
           <p>Start Time</p>

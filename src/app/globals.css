@@ -6,6 +6,14 @@ body {
   position: relative;
 }
 
+.ltr {
+  direction: ltr;
+}
+
+.rtl {
+  direction: rtl;
+}
+
 .bodyContainer {
   position: fixed;
   z-index: 1000;
