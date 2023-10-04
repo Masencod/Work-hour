@@ -177,12 +177,15 @@ export default function Home() {
           </main>
         : 
           <>
-            <div className="w-full h-[100vh] flex justify-center items-center">
+            <div className="w-full h-[100vh] flex flex-col gap-y-12 justify-center items-center">
+              <p className="font-bold text-2xl text-center px-4">
+                IF YOU ARE LOGGING IN WITH GOOGLE OR GITHUB , <span className="text-teal-200">REFRESH</span> AFTER LOGIN
+              </p>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
                 onClick={login}
               >
-                U NEEED TOOO LOGGGIIIIINNNNNNNNNN
+                LOGIN HERE !!!!!
               </button>
             </div>
           </>
