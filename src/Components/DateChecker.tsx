@@ -93,7 +93,7 @@ export default function DateChecker({
 
   const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    if (value >= 0) {
+    if (value >= 0 && value < 10000) {
       setYear(value);
     }
   };
@@ -102,6 +102,10 @@ export default function DateChecker({
     const value = Number(e.target.value);
     if (value >= 1 && value <= 12) {
       setMonth(value);
+    } else if (value > 12) {
+      setMonth(12)
+    } else if (value < 1) {
+      setMonth(1)
     }
   };
   const handleMonthAdd = () => {
@@ -170,11 +174,9 @@ export default function DateChecker({
     const monthKeys = Object.keys(monthData).filter((item) => monthData[item]?.start_time && monthData[item]?.end_time && monthData[item]?.personal_time);
     const data: any = []
     monthKeys.forEach((item , index) => {
-      data.push([ item , formatNumberToTime(monthValues[index]["start_time"]) , formatNumberToTime(monthValues[index]["end_time"]) , formatNumberToTime(monthValues[index]["personal_time"]) ,  ...(monthValues[index]["project"] ? [monthValues[index]["project"]] : []) ])
+      data.push([ `${year}/${month}/${item}` , formatNumberToTime(monthValues[index]["start_time"]) , formatNumberToTime(monthValues[index]["end_time"]) , formatNumberToTime(monthValues[index]["personal_time"]) ,  ...(monthValues[index]["project"] ? [monthValues[index]["project"]] : []) ])
     })
     console.log(data)
-    //@ts-ignore
-    // setDataForCSV(prev => data)
     setDataForCSV(data)
   }
 

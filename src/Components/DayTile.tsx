@@ -60,7 +60,7 @@ export default function DayTile<T extends DateObject>({
   return (
     <>
       <div
-        className={`border-[0.4rem] rounded-[20%] w-12 h-12 md:w-20 md:h-20 flex items-center justify-center ${className} ${checkDayInUser(date, user)}`}
+        className={`border-[0.4rem] rounded-[20%] w-12 h-12 md:w-20 md:h-20 flex items-center justify-center cursor-pointer ${className} ${checkDayInUser(date, user)}`}
         id={id}
         onClick={onClick}
       >

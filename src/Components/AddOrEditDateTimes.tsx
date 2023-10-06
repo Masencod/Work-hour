@@ -70,13 +70,6 @@ export default function AddOrEditDateTimes ({
   
     return timeDiffInHours;
   }
-
-  // useEffect(() => {
-  //   setStartTime(undefined)
-  //   setEndtTime(undefined)
-  //   setPersonalTime(undefined)
-  //   setProject(data?.project ?? "")
-  // },[isOpen])
   
   useEffect(() => {
       console.log(data)
@@ -113,7 +106,6 @@ export default function AddOrEditDateTimes ({
         <li>
           <p>Start Time</p>
           <TimeInput value={startTime} onChange={(e) => setStartTime(e)} />
-          {/* <input className="p-2 rounded-lg text-black" value={startTime} onChange={(e) => setStartTime(Number(e.target.value) || 0)} type="text" inputMode="numeric"/> */}
         </li>
         <li>
           <p>End Time</p>

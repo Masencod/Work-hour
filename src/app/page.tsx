@@ -11,6 +11,7 @@ import { getFirestore, doc, setDoc , getDoc, DocumentData } from "firebase/fires
 import { getAnalytics } from "firebase/analytics";
 import "firebase/firestore";
 import firebase from "firebase/compat/app";
+import axios from "axios";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQLEjdTMFiE-j-3yoCkwPvr7QTw_tDPIg",
@@ -26,33 +27,6 @@ declare global {
   interface Window {
     netlifyIdentity: any;
   }
-}
-
-const dataF = {
-  1402: {
-    6: {
-      1: {
-        enter_time: 1000,
-        exit_time: 1200,
-        personal_time: 10,
-        project: "BEHBINgggggggg",
-        isHoliday: true,
-      },
-      2: {
-        enter_time: 1000,
-        exit_time: 1200,
-        personal_time: 10,
-        project: "BEHBINgggggggg",
-        isHoliday: false,
-      },
-      21: {
-        enter_time: 1000,
-        exit_time: 1200,
-        project: "BEHBINgggggggg",
-        isHoliday: true,
-      },
-    },
-  },
 }
 
 export default function Home() {
@@ -92,7 +66,7 @@ export default function Home() {
   const currentDate = new Date();
   const jalaliDate = jalaali.toJalaali(
     currentDate.getFullYear(),
-    currentDate.getMonth() + 1, // Note: JavaScript months are 0-based, so we add 1
+    currentDate.getMonth() + 1,
     currentDate.getDate()
   );
 
@@ -170,9 +144,6 @@ export default function Home() {
             <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
             <div className="mt-2 px-2">
               <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.email}/>
-            <div>
-
-              </div>
             </div>
           </main>
         : 
