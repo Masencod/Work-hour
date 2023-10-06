@@ -143,29 +143,29 @@ export default function Home() {
 
   return (
     <>
-      {loggedIn
-        ?
-          <main className="w-full">
-            <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
-            <div className="mt-2 px-2">
-              <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.email}/>
-            </div>
-          </main>
-        : 
-          <>
-            <div className="w-full h-[100vh] flex flex-col gap-y-12 justify-center items-center">
-              <p className="font-bold text-2xl text-center px-4">
-                IF YOU ARE LOGGING IN WITH GOOGLE OR GITHUB , <span className="text-teal-200">REFRESH</span> AFTER LOGIN
-              </p>
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                onClick={login}
-              >
-                LOGIN HERE !!!!!
-              </button>
-            </div>
-          </>
-      }
+        {loggedIn
+          ?
+            <main className="w-full">
+              <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
+              <div className="mt-2 px-2">
+                <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.email}/>
+              </div>
+            </main>
+          : 
+            <>
+              <div className="w-full h-[100vh] flex flex-col gap-y-12 justify-center items-center">
+                <p className="font-bold text-2xl text-center px-4">
+                  IF YOU ARE LOGGING IN WITH GOOGLE OR GITHUB , <span className="text-teal-200">REFRESH</span> AFTER LOGIN
+                </p>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  onClick={login}
+                >
+                  LOGIN HERE !!!!!
+                </button>
+              </div>
+            </>
+        }
     </>
   );
 }
