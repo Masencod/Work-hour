@@ -14,6 +14,20 @@ body {
   direction: rtl;
 }
 
+.circle-loader {
+  width: 3rem; /* Adjust the size as needed */
+  height: 3rem; /* Adjust the size as needed */
+  border: 0.4rem solid transparent;
+  border-top-color: #3498db; /* Change the color as needed */
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* Adjust the animation duration as needed */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .bodyContainer {
   position: fixed;
   z-index: 1000;

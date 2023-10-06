@@ -6,6 +6,8 @@ import Modal from "./Modal";
 import { DateObject } from "./DayTile";
 import AddOrEditDateTimes from "./AddOrEditDateTimes";
 import { CSVDownload } from "react-csv";
+import { modalDayState } from "@/recoil/stateRecoils";
+import {useRecoilState} from "recoil"
 
 
 type weekDayType = {
@@ -69,7 +71,8 @@ export default function DateChecker({
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalDate, setModalDate] = useState<DateProps>({})
-  const [modalDay, setModalDay] = useState<DateObject>({day: 1, month: 1, year: 1402,dayOfWeek: ""})
+  // const [modalDay, setModalDay] = useState<DateObject>({day: 1, month: 1, year: 1402,dayOfWeek: ""})
+  const [modalDay, setModalDay] = useRecoilState<DateObject>(modalDayState)
   const [dataForCSV, setDataForCSV] = useState<any>([])
   const [isDownloadReady, setIsDownloadReady] = useState(0);
 
@@ -224,6 +227,12 @@ export default function DateChecker({
     }
   }
 
+  const jafang = (day:any) => {
+    console.log(modalDay === day)
+    console.log(day)
+    console.log(modalDay)
+  }
+
   const firstDayOfWeek: any = days[0].dayOfWeek;
 
   return (
@@ -288,11 +297,11 @@ export default function DateChecker({
                     handleOnClick(date)
                   } else {
                     setModalDate(user?.[date?.year]?.[date?.month]?.[date?.day])
-                    setModalDay(date)
+                    setModalDay(prev => date)
                     setIsModalOpen(true)
+                    jafang(date)
                   }
-                }
-                }
+                }}
               />
             ))}
           </div>

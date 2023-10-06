@@ -9,6 +9,8 @@ import * as jalaali from "jalaali-js";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc , getDoc, DocumentData } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
+import { useRecoilState } from "recoil"
+import { loadStateAtom } from "@/recoil/stateRecoils";
 import "firebase/firestore";
 import firebase from "firebase/compat/app";
 import axios from "axios";
@@ -73,6 +75,7 @@ export default function Home() {
   const [user, setUser] = useState<userTypes | null>(null);
   const [userFromDb, setUserFromDb] = useState<DocumentData | null>(null);
   const [loggedIn, setLoggedIn] = useState(netlifyAuth.isAuthenticated);
+  const [isLoading , setIsLoading] = useRecoilState(loadStateAtom)
   
   useMemo(() => {
     if (user) {
@@ -81,8 +84,10 @@ export default function Home() {
   },[user])
 
   async function addWorkHourEntry(userName: string , userData: DocumentData | null): Promise<void> {
+    setIsLoading(true)
     await setDoc(doc(db, "users", userName), userData);
     fetchUser(userName);
+    setIsLoading(false)
   }
 
   async function fetchUser(userName: string) {

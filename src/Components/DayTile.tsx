@@ -1,5 +1,7 @@
 import Modal from "./Modal";
-
+import { useRecoilState} from "recoil";
+import { loadStateAtom ,modalDayState } from "@/recoil/stateRecoils";
+import { useEffect, useState } from "react";
 
 export interface DateObject {
   day: number;
@@ -7,13 +9,6 @@ export interface DateObject {
   year: number;
   dayOfWeek: string;
 }
-
-const squareCLasses: any = {
-  "done": "border-green-500",
-  "holiday": "border-red-500",
-  "notTouched": "border-slate-500",
-  "halflyDone": "border-yellow-500",
-};
 
 type DateTileProps<T extends DateObject> = {
   date: T;
@@ -34,7 +29,8 @@ export default function DayTile<T extends DateObject>({
   onClick
 }: DateTileProps<T>) {
 
-
+  const [isLoading , setIsLoading] = useRecoilState(loadStateAtom)
+  const [modalDay, setModalDay] = useRecoilState<DateObject>(modalDayState)
   
   const checkDayInUser = (date: any , user: any) => {
     if (user?.[date.year]?.[date.month]?.[date.day]) {
@@ -56,11 +52,25 @@ export default function DayTile<T extends DateObject>({
     }
   }
 
+  useEffect(() => {
+    if (modalDay == date) {
+      console.log(isLoading && modalDay === date)
+    }
+  },[modalDay,date])
+
+  
+  const squareCLasses: any = {
+    "done": `${isLoading && modalDay.day === date.day ? "border-green-500 border-t-green-300" : "border-green-500"}`,
+    "holiday": `${isLoading && modalDay.day === date.day ? "border-red-500 border-t-red-300" : "border-red-500"}`,
+    "notTouched": `${isLoading && modalDay.day === date.day ? "border-slate-500 border-t-slate-300" : "border-slate-500"}`,
+    "halflyDone": `${isLoading && modalDay.day === date.day ? "border-yellow-500 border-t-yellow-300" : "border-yellow-500"}`,
+  };
+
 
   return (
     <>
       <div
-        className={`border-[0.4rem] rounded-[20%] w-12 h-12 md:w-20 md:h-20 flex items-center justify-center cursor-pointer ${className} ${checkDayInUser(date, user)}`}
+        className={`border-[0.4rem] rounded-[20%] w-12 h-12 md:w-20 md:h-20 flex items-center justify-center cursor-pointer transition-all ${isLoading && modalDay.day === date.day ? 'rounded-full animate-spin' : ''} ${className} ${checkDayInUser(date, user)}`}
         id={id}
         onClick={onClick}
       >

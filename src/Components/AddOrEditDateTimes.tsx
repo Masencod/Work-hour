@@ -1,4 +1,6 @@
 import { useState, ChangeEvent, useEffect } from "react";
+import { useRecoilState} from "recoil";
+import { loadStateAtom ,modalDayState } from "@/recoil/stateRecoils";
 import { DocumentData } from "firebase/firestore";
 import { DateProps } from "./DateChecker";
 import TimeInput from "./TimeInput";
@@ -27,8 +29,10 @@ export default function AddOrEditDateTimes ({
   const [endtTime, setEndtTime ] = useState<number | undefined>()
   const [personalTime, setPersonalTime ] = useState<number | undefined>()
   const [project, setProject ] = useState<string | undefined>("")
+  const [modalDay, setModalDay] = useRecoilState(modalDayState)
   
   const handleAdd = () => {
+    setModalDay((prev:any) => ({...prev , year: date.year , month: date.month , day: date.day }))
     const dayData = user?.[date.year]?.[date.month]?.[date.day] 
     const newSendData = {
       ...user,
@@ -72,8 +76,6 @@ export default function AddOrEditDateTimes ({
   }
   
   useEffect(() => {
-      console.log(data)
-      console.log(date)
       setStartTime(data ? data?.start_time ? data.start_time : undefined : undefined)
       setEndtTime(data ? data?.end_time ? data.end_time : undefined : undefined)
       setPersonalTime(data ? data?.personal_time ? data.personal_time : undefined : undefined)
