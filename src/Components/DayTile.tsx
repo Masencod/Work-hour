@@ -60,21 +60,21 @@ export default function DayTile<T extends DateObject>({
 
   
   const squareCLasses: any = {
-    "done": `${isLoading && modalDay.day === date.day ? "border-green-500 border-t-green-300" : "border-green-500"}`,
-    "holiday": `${isLoading && modalDay.day === date.day ? "border-red-500 border-t-red-300" : "border-red-500"}`,
-    "notTouched": `${isLoading && modalDay.day === date.day ? "border-slate-500 border-t-slate-300" : "border-slate-500"}`,
-    "halflyDone": `${isLoading && modalDay.day === date.day ? "border-yellow-500 border-t-yellow-300" : "border-yellow-500"}`,
+    "done": `${isLoading && modalDay.day === date.day ? "greeneLoad" : "greene"}`,
+    "holiday": `${isLoading && modalDay.day === date.day ? "redeLoad" : "rede"}`,
+    "notTouched": `${isLoading && modalDay.day === date.day ? "slateeLoad" : "slatee"}`,
+    "halflyDone": `${isLoading && modalDay.day === date.day ? "yelloweLoad" : "yellowe"}`,
   };
 
 
   return (
     <>
       <div
-        className={`border-[0.4rem] rounded-[20%] w-12 h-12 md:w-20 md:h-20 flex items-center justify-center cursor-pointer transition-all ${isLoading && modalDay.day === date.day ? 'rounded-full animate-spin' : ''} ${className} ${checkDayInUser(date, user)}`}
+        className={`daytile border-[0.4rem] rounded-[20%] hover:rounded-[30%] w-12 h-12 md:w-20 md:h-20 flex items-center justify-center cursor-pointer transition-all ${isLoading && modalDay.day === date.day ? 'fullroundi animate-spin' : ''} ${className} ${checkDayInUser(date, user)}`}
         id={id}
         onClick={onClick}
       >
-        <h3>{date.day}</h3>
+        <h3 className={`text-md md:text-xl font-bold ${isLoading && modalDay.day === date.day ? 'animate-spin-reverse' : ''}`}>{date.day}</h3>
       </div>
     </>
   );

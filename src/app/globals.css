@@ -14,6 +14,13 @@ body {
   direction: rtl;
 }
 
+.daytile {
+  transition: all 0.150s ease-in-out;
+  -moz-transition: all .150s;
+  -o-transition: all .150s;
+  -webkit-transition: all .150s;
+}
+
 .circle-loader {
   width: 3rem; /* Adjust the size as needed */
   height: 3rem; /* Adjust the size as needed */
@@ -96,4 +103,40 @@ body.modal-open {
 
 .animationScaleUp {
   animation: scaleup 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.fullroundi {
+  border-radius: 50%;
+}
+
+.greene {
+  @apply border-green-500 
+}
+
+.greeneLoad {
+  @apply border-t-green-200 border-green-600
+}
+
+.rede {
+  @apply  border-red-500
+}
+
+.redeLoad {
+  @apply  border-t-red-200 border-red-600
+}
+
+.slatee {
+  @apply  border-slate-500
+}
+
+.slateeLoad {
+  @apply  border-slate-600 border-t-slate-200
+}
+
+.yellowe {
+  @apply border-yellow-500
+}
+
+.yelloweLoad {
+  @apply border-yellow-600 border-t-yellow-200
 }
