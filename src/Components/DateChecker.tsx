@@ -6,8 +6,8 @@ import Modal from "./Modal";
 import { DateObject } from "./DayTile";
 import AddOrEditDateTimes from "./AddOrEditDateTimes";
 import { CSVDownload } from "react-csv";
-import { modalDayState } from "@/recoil/stateRecoils";
-import {useRecoilState} from "recoil"
+import { useRecoilState} from "recoil";
+import { loadStateAtom ,modalDayState } from "@/recoil/stateRecoils";
 
 
 type weekDayType = {
@@ -75,6 +75,7 @@ export default function DateChecker({
   const [modalDay, setModalDay] = useRecoilState<DateObject>(modalDayState)
   const [dataForCSV, setDataForCSV] = useState<any>([])
   const [isDownloadReady, setIsDownloadReady] = useState(0);
+  const [isLoading , setIsLoading] = useRecoilState(loadStateAtom)
 
   const daysInMonth = jalaali.jalaaliMonthLength(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => {
@@ -224,6 +225,7 @@ export default function DateChecker({
       setIsSelecting(prev => !prev)
     } else {
       setIsSelecting(prev =>!prev)
+      setModalDay({day: 0 , month:0 ,year:0 , dayOfWeek: ""})
     }
   }
 
@@ -251,10 +253,12 @@ export default function DateChecker({
               />
             </label>
             <button
-              className={`${isSelecting ? `bg-green-500 hover:bg-green-700 motion-safe:animate-bounce` : `bg-red-500 hover:bg-red-700` } text-white text-sm font-bold py-1 px-2 rounded-full aspect-square`}
+              className={`${isSelecting ? `bg-green-500 hover:bg-green-700 motion-safe:animate-bounce` : `bg-red-500 hover:bg-red-700` } transition-all text-white text-sm font-bold py-1 px-2 rounded-full aspect-square ${isLoading && modalDay.year === 0 && modalDay.month === 0 && modalDay.dayOfWeek === "" && "border-8 border-slate-500 border-t-slate-200 animate-spin"}`}
               onClick={handleSelection}
             >
-              {isSelecting ? "Make Changes" : "Select Holidays"}
+              <div className={`${isLoading && modalDay.year === 0 && modalDay.month === 0 && modalDay.dayOfWeek === "" && "animate-spin-reverse"}`}>
+                {isSelecting ? "Make Changes" : "Select Holidays"}
+              </div>
             </button>
             <div className="flex justify-center gap-x-5 items-center !ml-6 md:!ml-8">
                 <div className="text-3xl md:text-5xl cursor-pointer" onClick={handleMonthAdd}>
@@ -305,7 +309,7 @@ export default function DateChecker({
               />
             ))}
           </div>
-          <div className="py-2 md:px-[7%] lg:px-[35%] flex w-full h-full justify-between gap-x-8">
+          <div className="py-2 md:px-[7%] lg:px-[22%] xl:px-[32%] flex w-full h-full justify-between gap-x-8">
             <div className="flex flex-col w-full justify-around items-center gap-y-8">
               <div className="flex flex-col items-center justify-center">
                 <p>
@@ -323,6 +327,18 @@ export default function DateChecker({
                   {baseHours}
                 </p>
               </div>
+            </div>
+            <div className="self-center hidden sm:inline-block">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              onClick={() => {
+                //@ts-ignore
+                setDataForCSV(prev => [])
+                setIsDownloadReady(prev => prev + 1)
+                calculateCSV()
+                }}>
+                Download CSV
+              </button>
+              {dataForCSV.length > 0 && <CSVDownload key={isDownloadReady} data={dataForCSV} headers={headers}/>}
             </div>
             <div className="flex flex-col w-full justify-around items-center gap-y-8">
               <div className="flex flex-col items-center justify-center">
@@ -343,18 +359,18 @@ export default function DateChecker({
               </div>
             </div>
           </div>
-          <div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            onClick={() => {
-              //@ts-ignore
-              setDataForCSV(prev => [])
-              setIsDownloadReady(prev => prev + 1)
-              calculateCSV()
-              }}>
-              Download CSV
-            </button>
-            {dataForCSV.length > 0 && <CSVDownload key={isDownloadReady} data={dataForCSV} headers={headers}/>}
-          </div>
+          <div className="self-center sm:hidden">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              onClick={() => {
+                //@ts-ignore
+                setDataForCSV(prev => [])
+                setIsDownloadReady(prev => prev + 1)
+                calculateCSV()
+                }}>
+                Download CSV
+              </button>
+              {dataForCSV.length > 0 && <CSVDownload key={isDownloadReady} data={dataForCSV} headers={headers}/>}
+            </div>
         </div>
         <Modal
           isOpen={isModalOpen}
