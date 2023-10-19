@@ -16,14 +16,14 @@ export default function NavBar({
       <div className="flex gap-x-2">
         {loggedIn && (
           <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+            className="transition-all bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
             onClick={() => logout()}
           >
             logout
           </button>
         )}
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          className="transition-all bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
           onClick={() => login()}
         >
           {loggedIn
