@@ -198,7 +198,6 @@ export default function DateChecker({
           : []),
       ]);
     });
-    console.log(data);
     setDataForCSV(data);
   }
 
@@ -377,7 +376,6 @@ export default function DateChecker({
                       );
                       setModalDay((prev) => date);
                       setIsModalOpen(true);
-                      jafang(date);
                     }
                   }}
                 />
