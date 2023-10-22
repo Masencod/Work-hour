@@ -351,20 +351,20 @@ export default function DateChecker({
               </div>
             </div>
             <div className="grid grid-cols-7 gap-4 md:gap-8">
-              <p className="text-center text-xs">Saturday</p>
-              <p className="text-center text-xs">Sunday</p>
-              <p className="text-center text-xs">Monday</p>
-              <p className="text-center text-xs">Tuesday</p>
-              <p className="text-center text-xs">Wednesday</p>
-              <p className="text-center text-xs">Thursday</p>
-              <p className="text-center text-xs">Friday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Saturday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Sunday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Monday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Tuesday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Wednesday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Thursday</p>
+              <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">Friday</p>
               {days.map((date, index) => (
                 <DayTile
                   id={`${year}-${month}-${index + 1}`}
                   key={index}
                   date={date}
                   className={
-                    index === 0 ? weekDaysToGridColumns[firstDayOfWeek] : ""
+                    `justify-self-center ${index === 0 ? weekDaysToGridColumns[firstDayOfWeek] : ""}`
                   }
                   user={user}
                   onClick={() => {
@@ -382,14 +382,14 @@ export default function DateChecker({
               ))}
             </div>
             <div className="py-2 md:px-[7%] lg:px-[22%] xl:px-[32%] flex w-full h-full justify-between gap-x-8">
-              <div className="flex flex-col w-full justify-around items-center gap-y-8">
+              <div className="flex flex-col w-full justify-around items-center gap-y-2 md:gap-y-8">
                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                   <p>Working Days</p>
-                  <p className="pt-1">{workDays}</p>
+                  <p className="pt-1 w-full text-center">{workDays}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                   <p>Month Work Hours</p>
-                  <p className="pt-1">{baseHours}</p>
+                  <p className="pt-1 w-full text-center">{baseHours}</p>
                 </div>
               </div>
               <div className="self-center hidden sm:inline-block">
@@ -412,15 +412,15 @@ export default function DateChecker({
                   />
                 )}
               </div>
-              <div className="flex flex-col w-full justify-around items-center gap-y-8">
+              <div className="flex flex-col w-full justify-around items-center gap-y-2 md:gap-y-8">
                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                   <p>Vac Work Hours</p>
-                  <p className="pt-1">{vacHours}</p>
+                  <p className="pt-1 w-full text-center">{vacHours}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                   <p>{hourDiff > 0 ? "Needed Hours" : "Overtime Hours"}</p>
                   <p
-                    className={`pt-1 ${
+                    className={`pt-1 w-full text-center ${
                       hourDiff > 0 ? "text-red-300" : "text-green-300"
                     }`}
                   >

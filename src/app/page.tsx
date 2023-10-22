@@ -145,7 +145,7 @@ export default function Home() {
     <>
         {loggedIn
           ?
-            <main className="w-full h-[100vh] flex flex-col">
+            <main className="w-full h-[100svh] flex flex-col">
               <NavBar loggedIn={loggedIn} login={login} logout={logout} user={user} />
               <div className="mt-2 px-2 flex-1">
                 <DateChecker setUser={setUserFromDb} user={userFromDb} addTime={addWorkHourEntry} userName={user?.email}/>
