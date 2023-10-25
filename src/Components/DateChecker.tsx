@@ -294,7 +294,7 @@ export default function DateChecker({
                   modalDay.year === 0 &&
                   modalDay.month === 0 &&
                   modalDay.dayOfWeek === "" &&
-                  "border-8 border-slate-500 border-t-slate-200 animate-spin"
+                  "w-[88px] h-[88px] border-8 border-slate-500 border-t-slate-200 animate-spin"
                 }`}
                 onClick={handleSelection}
               >
