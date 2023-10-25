@@ -22,6 +22,9 @@ const config: Config = {
           '100%': { transform: 'rotate(0deg)' },
         },
       },
+      fontFamily: {
+        me: ['var(--font-me)']
+      }
     },
   },
   plugins: [],

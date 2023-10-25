@@ -8,6 +8,7 @@ import AddOrEditDateTimes from "./AddOrEditDateTimes";
 import { CSVDownload } from "react-csv";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loadStateAtom, modalDayState } from "@/recoil/stateRecoils";
+import { hourToText } from "@/Utils/common";
 
 type weekDayType =
   | {
@@ -265,20 +266,6 @@ export default function DateChecker({
     }
   };
 
-  const hourToText = (hour: number) => {
-    let x = 0;
-    const mins = Number(hour.toString().split(".")[1]);
-    if (mins >= 10 || (hour * 100) < 10 ) {
-      x = 0.6;
-    } else {
-      x = 6;
-    }
-    if (hour === 0) return "Enough time ( 0 )"
-    return `${
-      Math.floor(hour) === 0 ? "" : `${Math.floor(hour)} Hours and`
-    } ${Math.floor(mins * x) === 0 ? "" : `${Math.floor(mins * x)} Minutes`}`;
-  };
-
   const firstDayOfWeek: any = days[0].dayOfWeek;
 
   return (
@@ -287,14 +274,14 @@ export default function DateChecker({
         <>
           <div className="flex flex-col items-center justify-center space-y-4 w-full">
             <div className="flex space-x-4 w-full">
-              <label className="flex flex-col items-center w-full">
-                <span className="mb-2">Year:</span>
+              <label className="flex justify-end items-center mr-2 gap-x-4 w-full">
+                <span className="mb-2 font-bold hidden md:inline-block">Year:</span>
                 <input
                   type="number"
                   inputMode="numeric"
                   value={year}
                   onChange={handleYearChange}
-                  className="p-2 bg-slate-500 border rounded-md w-[3.4rem] md:w-1/2"
+                  className="p-2 outline-none border-4 bg-slate-500 rounded-full text-center font-bold w-16 h-16 md:w-20 md:h-20"
                 />
               </label>
               <button
@@ -302,7 +289,7 @@ export default function DateChecker({
                   isSelecting
                     ? `bg-green-500 hover:bg-green-700 motion-safe:animate-bounce`
                     : `bg-red-500 hover:bg-red-700`
-                } transition-all text-white text-sm font-bold py-1 px-2 rounded-full aspect-square ${
+                } w-20 h-20 transition-all text-white text-sm font-bold py-1 px-2 rounded-full aspect-square ${
                   isLoading &&
                   modalDay.year === 0 &&
                   modalDay.month === 0 &&
@@ -325,27 +312,27 @@ export default function DateChecker({
               </button>
               <div className="flex justify-center gap-x-5 items-center !ml-6 md:!ml-8">
                 <div
-                  className="text-3xl md:text-5xl cursor-pointer"
+                  className="text-3xl pb-2 md:text-5xl cursor-pointer"
                   onClick={handleMonthAdd}
                 >
                   +
                 </div>
                 <div
-                  className="text-3xl md:text-5xl cursor-pointer"
+                  className="text-3xl pb-2 md:text-5xl cursor-pointer"
                   onClick={handleMonthMinus}
                 >
                   -
                 </div>
               </div>
               <div className="flex items-center gap-x-4 md:gap-x-10 justify-end w-full">
-                <label className="flex flex-col items-center w-full">
-                  <span className="mb-2">Month:</span>
+                <label className="flex justify-start items-center ml-2 gap-x-4 w-full">
+                  <span className="mb-2 font-bold hidden md:inline-block">Month:</span>
                   <input
                     type="number"
                     inputMode="numeric"
                     value={month}
                     onChange={handleMonthChange}
-                    className="p-2 bg-slate-500 border rounded-md w-[2.2rem] md:w-1/2"
+                    className="p-2 outline-none bg-slate-500 border-4 rounded-full text-center font-bold w-12 h-12 md:w-20 md:h-20"
                   />
                 </label>
               </div>

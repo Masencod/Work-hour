@@ -3,10 +3,69 @@ import { useRecoilState} from "recoil";
 import { loadStateAtom ,modalDayState } from "@/recoil/stateRecoils";
 import { DocumentData } from "firebase/firestore";
 import { DateProps } from "./DateChecker";
+import { hourToText } from "@/Utils/common";
+import localFont from 'next/font/local'
 import TimeInput from "./TimeInput";
 
-const persianMonths = [ "فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"]
+type Date = {
+  day: number;
+  month: number;
+  year: number;
+  dayOfWeek: "Saturday" | "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "" | string;
+}
 
+const me = localFont({
+  src: [
+    {
+      path: '../fonts/Estedad-Thin.woff2',
+      weight: '100'
+    },
+    {
+      path: '../fonts/Estedad-ExtraLight.woff2',
+      weight: '200'
+    },
+    {
+      path: '../fonts/Estedad-Light.woff2',
+      weight: '300'
+    },
+    {
+      path: '../fonts/Estedad-Regular.woff2',
+      weight: '400'
+    },
+    {
+      path: '../fonts/Estedad-Medium.woff2',
+      weight: '500'
+    },
+    {
+      path: '../fonts/Estedad-SemiBold.woff2',
+      weight: '600'
+    },
+    {
+      path: '../fonts/Estedad-Bold.woff2',
+      weight: '700'
+    },
+    {
+      path: '../fonts/Estedad-ExtraBold.woff2',
+      weight: '800'
+    },
+    {
+      path: '../fonts/Estedad-Black.woff2',
+      weight: '900'
+    },
+  ],
+  variable: '--font-mers'
+})
+
+const persianMonths = [ "فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"]
+const daysMap = {
+  Saturday: "شنبه",
+  Sunday: "یکشنبه",
+  Monday: "دوشنبه",
+  Tuesday: "سه‌شنبه",
+  Wednesday: "چهارشنبه",
+  Thursday: "پنجشنبه",
+  Friday: "جمعه",
+}
 export default function AddOrEditDateTimes ({
   userName ,
   user ,
@@ -18,7 +77,7 @@ export default function AddOrEditDateTimes ({
 }: {
   userName: string | undefined
   user: DocumentData | null;
-  date: any
+  date: Date
   isOpen: boolean;
   data: DateProps
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,6 +113,9 @@ export default function AddOrEditDateTimes ({
     setIsOpen(false)
   }
 
+  useEffect(() => {
+    console.log(date)
+  },[date])
   function convertTimeToHours(time:number) {
     const hours = Math.floor(time / 100);
     const minutes = time % 100;
@@ -82,7 +144,6 @@ export default function AddOrEditDateTimes ({
       setProject(data ? data?.project ? data.project : "" : "")
     
   },[data,date])
-
   return (
     <div className="flex flex-col gap-y-5 bg-slate-400 h-full w-full p-4 justify-center items-center">
       <div className="flex flex-row-reverse items-center gap-x-2">
@@ -90,17 +151,24 @@ export default function AddOrEditDateTimes ({
           <p className="text-xl">
             {date.day}
           </p>
-          <p className="text-xl">
+          <p className={`text-xl font-me ${me.className}`}>
             {persianMonths[date.month - 1]}
           </p>
+          <span className="mt-[2px] text-white">
+            |
+          </span>
+          <p className={`text-xl ${me.className}`}>
+            {/*@ts-ignore*/}
+            {daysMap[date.dayOfWeek]}
+          </p>
         </div>
-        {startTime && endtTime && <p className="text-teal-200 flex flex-row-reverse gap-x-2">
+        {startTime && endtTime && <p className="text-yellow-200 flex flex-row-reverse gap-x-2">
           <span className="mt-[2px] text-white">
             |
           </span>
           {personalTime
-            ? (calculateTimeDifference(startTime, endtTime) - convertTimeToHours(personalTime)).toFixed(2) + "  Hours"
-            : calculateTimeDifference(startTime, endtTime).toFixed(2) + "  Hours"
+            ? hourToText(Number((calculateTimeDifference(startTime, endtTime) - convertTimeToHours(personalTime)).toFixed(2)) , false) 
+            : hourToText(Number(calculateTimeDifference(startTime, endtTime).toFixed(2)) , false)
           }
         </p>}
       </div>
@@ -119,7 +187,9 @@ export default function AddOrEditDateTimes ({
         </li>
         <li>
           <p>Project Names</p>
-          <input className="p-2 rounded-lg text-black" value={project} onChange={(e) => setProject(e.target.value)} type="text"/>
+          <div>
+            <input className={`p-2 w-full ${me.className} rounded-lg text-black`} value={project} onChange={(e) => setProject(e.target.value)} type="text"/>
+          </div>
         </li>
       </ul>
       <button className="bg-slate-700 mt-4 w-fit p-2 md:p-5 rounded-md" onClick={handleAdd}>

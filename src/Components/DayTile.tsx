@@ -7,7 +7,7 @@ export interface DateObject {
   day: number;
   month: number;
   year: number;
-  dayOfWeek: string;
+  dayOfWeek: "Saturday" | "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "" | string;
 }
 
 type DateTileProps<T extends DateObject> = {
