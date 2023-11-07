@@ -17,6 +17,6 @@ export const hourToText = (hour: number , wantText = true) => {
       Math.floor(hour) === 0 ? "" : `${Math.floor(hour)} Hours`
     } ${Math.floor(hour) !== 0 && Math.floor(mins * x) !== 0 ? `and` : ""} ${Math.floor(mins * x) === 0 ? "" : `${Math.floor(mins * x)} Minutes`}`;
   } else {
-    return `${Math.floor(hour).toString().padStart(2 , "0")}:${Math.floor(mins).toString().padStart(2 , "0")}`
+    return `${Math.floor(hour).toString().padStart(2 , "0")}:${Math.floor(mins * x).toString().padStart(2 , "0")}`
   }
 };
