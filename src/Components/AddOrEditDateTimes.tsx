@@ -142,8 +142,8 @@ export default function AddOrEditDateTimes ({
       setEndtTime(data ? data?.end_time ? data.end_time : undefined : undefined)
       setPersonalTime(data ? data?.personal_time ? data.personal_time : undefined : undefined)
       setProject(data ? data?.project ? data.project : "" : "")
-    
   },[data,date])
+
   return (
     <div className="flex flex-col gap-y-5 bg-slate-400 h-full w-full p-4 justify-center items-center">
       <div className="flex flex-row-reverse items-center gap-x-2">
