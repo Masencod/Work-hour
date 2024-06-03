@@ -99,12 +99,6 @@ export default function DayTile<T extends DateObject>({
         }
     };
 
-    useEffect(() => {
-        if (modalDay == date) {
-            console.log(isLoading && modalDay === date);
-        }
-    }, [modalDay, date]);
-
     const squareCLasses: any = {
         done: `${
             isLoading && modalDay.day === date.day ? 'greeneLoad' : 'greene'

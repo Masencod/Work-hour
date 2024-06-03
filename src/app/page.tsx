@@ -87,7 +87,6 @@ export default function Home() {
 
     const login = () => {
         netlifyAuth.authenticate((user: userTypes) => {
-            console.log(user);
             setLoggedIn(!!user);
             setUser(user);
         });

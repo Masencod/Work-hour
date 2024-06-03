@@ -3,7 +3,7 @@ import { useEffect } from "react";
 const Modal = ({
   isOpen = false,
   setIsOpen,
-  onOverlayClick = console.log,
+  onOverlayClick = () => {},
   className = "",
   children,
 }: {

@@ -131,7 +131,6 @@ export default function AddOrEditDateTimes({
                 weekday: 'long',
             }),
         };
-        console.log(dateOBJ);
         setSelectedDate(dateOBJ);
         setDateData(user?.[dateOBJ?.year]?.[dateOBJ?.month]?.[dateOBJ?.day]);
         resetStats();
@@ -151,7 +150,6 @@ export default function AddOrEditDateTimes({
                 weekday: 'long',
             }),
         };
-        console.log(dateOBJ);
         setSelectedDate(dateOBJ);
         setDateData(user?.[dateOBJ?.year]?.[dateOBJ?.month]?.[dateOBJ?.day]);
         resetStats();
@@ -194,10 +192,6 @@ export default function AddOrEditDateTimes({
         if (userName) addTime(userName, newSendData);
         setIsOpen(false);
     };
-
-    useEffect(() => {
-        console.log('selectedDateeeeeeeee', selectedDate);
-    }, [selectedDate]);
 
     useEffect(() => {
         setSelectedDate(date);

@@ -257,14 +257,6 @@ export default function DateChecker({
                         }, 0)
                         .toFixed(2)
                 );
-                console.log(
-                    Object?.values(monthData)?.filter(
-                        (item: any) =>
-                            !item?.start_time ||
-                            !item?.end_time ||
-                            !item?.personal_time
-                    )?.length ?? 0
-                );
                 setWorkedDays(
                     Object?.values(monthData)?.filter(
                         (item: any) =>
