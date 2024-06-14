@@ -1,6 +1,6 @@
 import Modal from './Modal';
 import { useRecoilState } from 'recoil';
-import { loadStateAtom, modalDayState } from '@/recoil/stateRecoils';
+import { loadStateAtom, modalDayStateAtom } from '@/recoil/stateRecoils';
 import { useEffect, useState } from 'react';
 import {
     DocumentData,
@@ -54,7 +54,7 @@ export default function DayTile<T extends DateObject>({
 }: DateTileProps<T>) {
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalDay, setModalDay] = useState<DateObject>(modalDayState);
+    const [modalDay, setModalDay] = useState<DateObject>(modalDayStateAtom);
 
     async function addWorkHourEntry(
         userName: string,
@@ -117,7 +117,7 @@ export default function DayTile<T extends DateObject>({
     return (
         <>
             <div
-                className={`daytile border-[0.4rem] rounded-[20%] hover:rounded-[30%] w-12 h-12 md:w-20 md:h-20 flex text-center items-center justify-center cursor-pointer transition-all ${
+                className={`daytile border-[0.4rem] rounded-[20%] hover:rounded-[30%] w-12 h-12 md:w-16 lg:w-20 md:h-16 lg:h-20 flex text-center items-center justify-center cursor-pointer transition-all ${
                     isLoading && modalDay.day === date.day
                         ? 'fullroundi animate-spin'
                         : ''
@@ -142,7 +142,7 @@ export default function DayTile<T extends DateObject>({
                     {date.day}
                 </h3>
             </div>
-            <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+            {isModalOpen && <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
                 <AddOrEditDateTimes
                     userName={userName}
                     user={user}
@@ -150,7 +150,7 @@ export default function DayTile<T extends DateObject>({
                     addTime={addWorkHourEntry}
                     setIsOpen={setIsModalOpen}
                 />
-            </Modal>
+            </Modal>}
         </>
     );
 }

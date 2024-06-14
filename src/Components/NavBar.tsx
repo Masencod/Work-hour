@@ -12,7 +12,7 @@ export default function NavBar({
   logout: () => void;
 }) {
   return (
-    <nav className="bg-black flex justify-between items-center px-5 py-2">
+    <nav className="bg-black flex justify-between items-center px-5 py-2 sticky top-0 z-10">
       <div className="flex gap-x-2">
         {loggedIn && (
           <button

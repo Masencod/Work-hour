@@ -7,7 +7,7 @@ import { DateObject } from './DayTile';
 import AddOrEditDateTimes from './AddOrEditDateTimes';
 import { CSVDownload } from 'react-csv';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { loadStateAtom, modalDayState } from '@/recoil/stateRecoils';
+import { loadStateAtom, modalDayStateAtom } from '@/recoil/stateRecoils';
 import { hourToText } from '@/Utils/common';
 
 type weekDayType =
@@ -75,11 +75,13 @@ export default function DateChecker({
     const [hourDiff, setHourDiff] = useState<number>(0);
     const [isSelecting, setIsSelecting] = useState<boolean>(false);
     const [modalDate, setModalDate] = useState<DateProps>({});
-    const [modalDay, setModalDay] = useRecoilState<DateObject>(modalDayState);
+    const [modalDay, setModalDay] =
+        useRecoilState<DateObject>(modalDayStateAtom);
     const [dataForCSV, setDataForCSV] = useState<any>([]);
     const [isDownloadReady, setIsDownloadReady] = useState(0);
     const [workedDays, setWorkedDays] = useState(0);
     const [isVPN, setIsVPN] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const isLoading = useRecoilValue(loadStateAtom);
 
     const daysInMonth = jalaali.jalaaliMonthLength(year, month);
@@ -363,7 +365,7 @@ export default function DateChecker({
                                 </label>
                             </div>
                         </div>
-                        <div className="grid grid-cols-7 gap-4 md:gap-8">
+                        <div className="grid grid-cols-7 gap-4 md:gap-4 lg:gap-8">
                             <p className="text-center ml-1 text-[0.6rem] md:ml-0 md:text-base">
                                 Saturday
                             </p>
@@ -411,7 +413,7 @@ export default function DateChecker({
                             ))}
                         </div>
                         <div className="py-2 md:px-[7%] lg:px-[22%] xl:px-[32%] flex w-full h-full justify-between gap-x-8">
-                            <div className="flex flex-col w-full justify-around items-center gap-y-2 md:gap-y-8">
+                            <div className="hidden md:flex flex-col w-full justify-around items-center gap-y-2 md:gap-y-8">
                                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                                     <p>Working Days</p>
                                     <p className="pt-1 w-full text-center">
@@ -421,13 +423,22 @@ export default function DateChecker({
                                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                                     <p>Needed hours per Day</p>
                                     <p className="pt-1 w-full text-center">
-                                        {(hourDiff / (workDays - workedDays)).toFixed(2)}
+                                        {(
+                                            hourDiff /
+                                            (workDays - workedDays)
+                                        ).toFixed(2)}
                                     </p>
                                 </div>
                             </div>
-                            <div className="self-center hidden sm:inline-block">
+                            <div className="self-center hidden sm:flex flex-col gap-y-8 items-center justify-center w-full">
                                 <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition-all"
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="md:hidden w-1/4 min-w-fit bg-yellow-700 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-xl transition-all"
+                                >
+                                    see stats
+                                </button>
+                                <button
+                                    className="bg-blue-500 w-1/3 min-w-fit hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition-all"
                                     onClick={() => {
                                         //@ts-ignore
                                         setDataForCSV((prev) => []);
@@ -445,7 +456,7 @@ export default function DateChecker({
                                     />
                                 )}
                             </div>
-                            <div className="flex flex-col w-full justify-around items-center gap-y-2 md:gap-y-8">
+                            <div className="hidden md:flex flex-col w-full justify-around items-center gap-y-2 md:gap-y-8">
                                 <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-slate-700">
                                     <p>Vac Work Hours</p>
                                     <p className="pt-1 w-full text-center">
@@ -472,7 +483,13 @@ export default function DateChecker({
                                 </div>
                             </div>
                         </div>
-                        <div className="self-center sm:hidden">
+                        <div className="self-center flex flex-col items-center gap-y-4 sm:hidden">
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="md:hidden w-1/4 min-w-fit bg-yellow-700 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-xl transition-all"
+                            >
+                                see stats
+                            </button>
                             <button
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition-all"
                                 onClick={() => {
@@ -511,6 +528,50 @@ export default function DateChecker({
                     </p>
                 </div>
             )}
+            {
+                <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+                    <div className="grid grid-cols-2 grid-rows-2 gap-8 px-4 py-8 bg-slate-700 text-white">
+                        <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-white">
+                            <p>Working Days</p>
+                            <p className="pt-1 w-full text-center">
+                                {workDays}
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-white">
+                            <p>Needed hours per Day</p>
+                            <p className="pt-1 w-full text-center">
+                                {(hourDiff / (workDays - workedDays)).toFixed(
+                                    2
+                                )}
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-white">
+                            <p>Vac Work Hours</p>
+                            <p className="pt-1 w-full text-center">
+                                {vacHours}
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center gap-y-1 divide-y-2 divide-dotted divide-white">
+                            <p>
+                                {hourDiff > 0
+                                    ? 'Needed Hours'
+                                    : 'Overtime Hours'}
+                            </p>
+                            <p
+                                className={`pt-1 w-full text-center ${
+                                    hourDiff > 0
+                                        ? 'text-red-300'
+                                        : 'text-green-300'
+                                }`}
+                            >
+                                {hourDiff > 0
+                                    ? hourToText(hourDiff)
+                                    : hourToText(-hourDiff)}
+                            </p>
+                        </div>
+                    </div>
+                </Modal>
+            }
         </>
     );
 }

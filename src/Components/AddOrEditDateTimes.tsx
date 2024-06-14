@@ -1,11 +1,10 @@
 import { useState, ChangeEvent, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { loadStateAtom, modalDayState } from '@/recoil/stateRecoils';
 import { DocumentData } from 'firebase/firestore';
-import { DateProps } from './DateChecker';
 import { hourToText } from '@/Utils/common';
 import localFont from 'next/font/local';
 import TimeInput from './TimeInput';
+import { modalDayStateAtom } from '@/recoil/stateRecoils';
 
 type Date = {
     day: number;
@@ -105,7 +104,7 @@ export default function AddOrEditDateTimes({
     const [personalTime, setPersonalTime] = useState<number | undefined>();
     const [selectedDate, setSelectedDate] = useState<Date>(date);
     const [project, setProject] = useState<string | undefined>('');
-    const [modalDay, setModalDay] = useRecoilState(modalDayState);
+    const [modalDay, setModalDay] = useRecoilState(modalDayStateAtom);
     const [dateData, setDateData] = useState(
         user?.[date?.year]?.[date?.month]?.[date?.day]
     );
@@ -194,8 +193,10 @@ export default function AddOrEditDateTimes({
     };
 
     useEffect(() => {
-        setSelectedDate(date);
-    }, [date]);
+        console.log(selectedDate)
+        // console.log(date)
+        // setSelectedDate(date);
+    }, [selectedDate]);
 
     function convertTimeToHours(time: number) {
         const hours = Math.floor(time / 100);

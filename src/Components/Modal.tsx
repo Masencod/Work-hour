@@ -42,7 +42,7 @@ const Modal = ({
       className={`${!isOpen ? "!hidden" : ""} overlay`}
     >
       <div
-        className={`bodyContainer animationScaleUp rounded-t-3xl w-full h-[65vh] md:top-1/4 md:rounded-xl md:mx-auto md:w-[500px] md:h ${className}`}
+        className={`bodyContainer animationScaleUp rounded-t-3xl w-full h-[fit-content] md:top-1/4 md:rounded-xl md:mx-auto md:w-[500px] md:h ${className}`}
       >
         {children}
       </div>

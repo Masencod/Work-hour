@@ -5,7 +5,7 @@ export const loadStateAtom: any = atom({
   default: false,
 })
 
-export const modalDayState: any = atom({
-  key: "modalDayState",
+export const modalDayStateAtom: any = atom({
+  key: "modalDayStateAtom",
   default: {day: 1, month: 1, year: 1402,dayOfWeek: ""},
 })
